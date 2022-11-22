@@ -187,6 +187,7 @@ bool isTimeWithinRange(int day_of_week, int hour, int minute)
   return false;
 }
 
+// Trigger the servo without any motion sensor triggers if past the end of the day's alarm time
 void triggerAlarmIfPastTime(int day_of_week, int hour, int minute)
 {
   int minutes = minute + (hour * 60);
@@ -201,6 +202,7 @@ void triggerAlarmIfPastTime(int day_of_week, int hour, int minute)
   }
 }
 
+// Ensure the light switch does not trigger more than once a day
 void adjustAlarm(int day_of_week, int hour)
 {
   if (alarmTriggered && hour == 0) 
@@ -209,6 +211,7 @@ void adjustAlarm(int day_of_week, int hour)
   }
 }
 
+// Check whether both sensors were triggered within 10 seconds of each other
 bool bothSensorsTripped() 
 {
   //Serial.print("Time between sensors: "); Serial.println(abs(last_sensor_trip[0] - last_sensor_trip[1]));
@@ -218,6 +221,7 @@ bool bothSensorsTripped()
   return false;
 }
 
+// Send the wake up time of the user to the mariadb database on the webserver via a GET request
 void sendTimeReadingsToWebserver(int hour, int minute, int second, int day)
 {
   String http_get_query = "GET /~benjamin.clough/IoT_Project/insertTripReading.php?hour="+String(hour)+"&day="+String(day)+"&minute="+String(minute)+"&second="+String(second)+" HTTP/1.1";
@@ -234,6 +238,7 @@ void sendTimeReadingsToWebserver(int hour, int minute, int second, int day)
   Serial.println(http_get_query);
 }
 
+// pre configured servo movement to turn a light switch on
 void lightSwitchServoMovement()
 {
   servo.write(140);
